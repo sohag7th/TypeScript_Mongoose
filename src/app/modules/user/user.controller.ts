@@ -38,7 +38,7 @@ const getAllUsers = async (req: Request, res: Response) => {
     const result = await UserServices.getAllUsersService();
     res.status(200).json({
       success: true,
-      message: 'Users get successfully!',
+      message: 'Users fetched successfully!',
       data: result,
     });
   } catch (error) {
@@ -56,7 +56,7 @@ const getSingleUser = async (req: Request, res: Response) => {
     const result = await UserServices.getSungleUserService(userId);
     res.status(200).json({
       success: true,
-      message: 'Users get successfully!',
+      message: 'User fetched successfully!',
       data: result,
     });
   } catch (error) {
@@ -68,8 +68,64 @@ const getSingleUser = async (req: Request, res: Response) => {
   }
 };
 
+const updateUser = async (req: Request, res: Response) => {
+  try {
+    console.log(' obhed ');
+    const result = await UserServices.updateUserService(req.body);
+
+    const { password, _id, __v, ...userWithoutPassword } = result.toObject();
+    userWithoutPassword.fullName = {
+      firstName: userWithoutPassword.fullName.firstName,
+      lastName: userWithoutPassword.fullName.lastName,
+    };
+    userWithoutPassword.address = {
+      street: userWithoutPassword.address.street,
+      city: userWithoutPassword.address.city,
+      country: userWithoutPassword.address.country,
+    };
+
+    res.status(200).json({
+      success: true,
+      message: 'User updated successfully!',
+      data: userWithoutPassword,
+    });
+  } catch (error) {
+    res.status(401).json({
+      success: false,
+      message: 'User not found!',
+      error: {
+        code: 404,
+        description: 'User not found!',
+      },
+    });
+  }
+};
+
+const deleteUser = async (req: Request, res: Response) => {
+  try {
+    const { userId } = req.params;
+    await UserServices.deleteUserService(userId);
+    res.status(200).json({
+      success: true,
+      message: 'User deleted successfully!',
+      data: null,
+    });
+  } catch (error) {
+    res.status(401).json({
+      success: false,
+      message: 'User not found!',
+      error: {
+        code: 404,
+        description: 'User not found!',
+      },
+    });
+  }
+};
+
 export const UserController = {
   createUser,
   getAllUsers,
   getSingleUser,
+  updateUser,
+  deleteUser,
 };

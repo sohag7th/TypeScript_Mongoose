@@ -1,5 +1,11 @@
 import { Schema, model } from 'mongoose';
-import { IAddress, IOrders, IUser, IUserFullName } from './user.interface';
+import {
+  IAddress,
+  IOrders,
+  IUser,
+  IUserFullName,
+  UserModel,
+} from './user.interface';
 import bcrypt from 'bcrypt';
 import config from '../../config';
 
@@ -52,7 +58,7 @@ const ordersSchema = new Schema<IOrders>({
   },
 });
 
-const userSchema = new Schema<IUser>({
+const userSchema = new Schema<IUser, UserModel>({
   userId: {
     type: Number,
     unique: true,
@@ -120,6 +126,12 @@ userSchema.post('save', function (doc, next) {
   next();
 });
 
-const User = model<IUser>('User', userSchema);
+//creating a custom static method
+userSchema.statics.isUserExists = async function (userId: string) {
+  const existingUser = await User.findOne({ userId });
+  return existingUser;
+};
+
+const User = model<IUser, UserModel>('User', userSchema);
 
 export default User;
