@@ -1,11 +1,8 @@
-import app from "./app";
-import config from "./app/config";
+/* eslint-disable no-console */
+import app from './app';
+import config from './app/config';
 
-import mongoose from "mongoose";
-
-const PORT = 5000;
-
-main().catch((err) => console.log(err));
+import mongoose from 'mongoose';
 
 async function main() {
   try {
@@ -18,3 +15,5 @@ async function main() {
     console.log(error);
   }
 }
+
+main();
