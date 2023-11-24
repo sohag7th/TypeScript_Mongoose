@@ -6,7 +6,7 @@ export interface IUser {
     firstName: string;
     lastName: string;
   };
-  age: string;
+  age: number;
   email: string;
   isActive: boolean;
   hobbies: [string];
@@ -14,5 +14,10 @@ export interface IUser {
     street: string;
     city: string;
     country: string;
+  };
+  orders: {
+    productName: string;
+    price: number;
+    quantity: number;
   };
 }
