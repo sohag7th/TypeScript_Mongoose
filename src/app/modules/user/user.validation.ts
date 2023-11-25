@@ -33,7 +33,7 @@ export const ordersValidationSchema = z.object({
 // Define the main user schema
 
 export const userValidationSchema = z.object({
-    userId: z.number().int().positive('User ID must be a positive integer!'),
+    userId: z.number().int().positive('UserId must be a positive integer!'),
     username: z.string().min(1, 'Username is required!'),
     password: z.string().min(1, 'Password is required!'),
     fullName: userFullNameValidationSchema.refine(data => Object.values(data).every(val => val.trim() !== ''), {

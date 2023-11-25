@@ -28,6 +28,7 @@ export interface IUser {
   hobbies: string[];
   address: IAddress;
   orders?: string | IOrders[];
+  __v?: number;
 }
 
 //for creating static
@@ -35,5 +36,6 @@ export interface IUser {
 export interface UserModel extends Model<IUser> {
   // eslint-disable-next-line no-unused-vars
   isUserExists(id: string): Promise<IUser | null>;
+  // eslint-disable-next-line no-unused-vars
   isOrderExists(id: string): Promise<IUser | null>;
 }

@@ -1,15 +1,17 @@
+/* eslint-disable no-unused-vars */
 import { Request, Response } from 'express';
 import { UserServices } from './user.service';
 import { ordersValidationSchema, userValidationSchema } from './user.validation';
+import { ZodError } from 'zod';
 
 const createUser = async (req: Request, res: Response) => {
   try {
-    const userData = req.body;
+    const zodParsedData = userValidationSchema.parse(req.body);
 
-    const zodParsedData = userValidationSchema.parse(userData);
-
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any, prefer-const
     const result = await UserServices.createUserService(zodParsedData);
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { password, _id, __v, ...userWithoutPassword } = result.toObject();
     userWithoutPassword.fullName = {
       firstName: userWithoutPassword.fullName.firstName,
@@ -26,12 +28,15 @@ const createUser = async (req: Request, res: Response) => {
       message: 'User created successfully!',
       data: userWithoutPassword,
     });
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
-    console.log(error);
-    res.status(401).json({
+    res.status(404).json({
       success: false,
-      message: 'Something is wrong',
-      error: error,
+      message: error.message,
+      error: {
+        code: 404,
+        description: error.message,
+      },
     });
   }
 };
@@ -44,11 +49,15 @@ const getAllUsers = async (req: Request, res: Response) => {
       message: 'Users fetched successfully!',
       data: result,
     });
-  } catch (error) {
-    res.status(401).json({
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
+    res.status(404).json({
       success: false,
-      message: 'error ',
-      data: [],
+      message: error.message,
+      error: {
+        code: 404,
+        description: error.message,
+      },
     });
   }
 };
@@ -56,7 +65,7 @@ const getAllUsers = async (req: Request, res: Response) => {
 const getSingleUser = async (req: Request, res: Response) => {
   try {
     const { userId } = req.params;
-    const result = await UserServices.getSungleUserService(userId);
+    const result = await UserServices.getSingleUserService(userId);
     res.status(200).json({
       success: true,
       message: 'User fetched successfully!',
@@ -71,14 +80,15 @@ const getSingleUser = async (req: Request, res: Response) => {
   }
 };
 
-
-
 const updateUser = async (req: Request, res: Response) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any 
   try {
-    console.log(' obhed ');
-    const result = await UserServices.updateUserService(req.body);
+    const zodParsedData = userValidationSchema.parse(req.body);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any, prefer-const
+    const result: any = await UserServices.updateUserService(zodParsedData);
 
-    const { password, _id, __v, ...userWithoutPassword } = result.toObject();
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { password, _id, __v, orders, ...userWithoutPassword } = result.toObject();
     userWithoutPassword.fullName = {
       firstName: userWithoutPassword.fullName.firstName,
       lastName: userWithoutPassword.fullName.lastName,
@@ -94,24 +104,36 @@ const updateUser = async (req: Request, res: Response) => {
       message: 'User updated successfully!',
       data: userWithoutPassword,
     });
-  } catch (error) {
-    res.status(401).json({
-      success: false,
-      message: 'User not found!',
-      error: {
-        code: 404,
-        description: 'User not found!',
-      },
-    });
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
+    if (error instanceof ZodError) {
+      res.status(400).json({
+        success: false,
+        message: 'Validation failed',
+        error: error.errors.map((err) => ({
+          code: 404,
+          description: `${err.path} is ${err.message}`,
+        })),
+      });
+    } else {
+      res.status(404).json({
+        success: false,
+        message: error.message,
+        error: {
+          code: 404,
+          description: error.message,
+        },
+      });
+    }
   }
 };
 
-const updateOrderUser = async (req: Request, res: Response) => {
+const createOrderForUser = async (req: Request, res: Response) => {
   try {
     const { userId } = req.params;
     const zodParsedData = ordersValidationSchema.parse(req.body);
 
-    await UserServices.updateUserOrderService(userId, zodParsedData);
+    await UserServices.createOrderForUserService(userId, zodParsedData);
 
     res.status(200).json({
       success: true,
@@ -120,14 +142,26 @@ const updateOrderUser = async (req: Request, res: Response) => {
     });
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
-    res.status(401).json({
-      success: false,
-      message: error.message,
-      error: {
-        code: 404,
-        description: 'User not found!',
-      },
-    });
+    if (error instanceof ZodError) {
+      res.status(400).json({
+        success: false,
+        message: 'Validation failed',
+        error: error.errors.map((err) => ({
+          code: 404,
+          description: err.message,
+        })),
+      });
+    } else {
+      res.status(404).json({
+        success: false,
+        message: error.message,
+        error: {
+          code: 404,
+          description: error.message,
+        },
+      });
+    }
+
   }
 };
 
@@ -179,18 +213,20 @@ const deleteUser = async (req: Request, res: Response) => {
   try {
     const { userId } = req.params;
     await UserServices.deleteUserService(userId);
+
     res.status(200).json({
       success: true,
       message: 'User deleted successfully!',
       data: null,
     });
-  } catch (error) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
     res.status(401).json({
       success: false,
-      message: 'User not found!',
+      message: error.message,
       error: {
         code: 404,
-        description: 'User not found!',
+        description: error.message,
       },
     });
   }
@@ -203,6 +239,6 @@ export const UserController = {
   getSingleUserOrders,
   getTotalPriceOrders,
   updateUser,
-  updateOrderUser,
+  createOrderForUser,
   deleteUser,
 };
