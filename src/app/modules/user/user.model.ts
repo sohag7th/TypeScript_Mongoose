@@ -1,7 +1,6 @@
 import { Schema, model } from 'mongoose';
 import {
   IAddress,
-  IOrders,
   IUser,
   IUserFullName,
   UserModel,
@@ -35,28 +34,28 @@ const addressSchema = new Schema<IAddress>({
   },
 });
 
-const ordersSchema = new Schema<IOrders>({
-  productName: {
-    type: String,
-    required: [true, 'Product name is required!'],
-  },
-  price: {
-    type: Number,
-    required: [true, 'Price is required!'],
-    validate: {
-      validator: (value: number) => Number.isInteger(value) && value > 0,
-      message: 'Price must be a positive integer!',
-    },
-  },
-  quantity: {
-    type: Number,
-    required: [true, 'Quantity is required!'],
-    validate: {
-      validator: (value: number) => Number.isInteger(value) && value > 0,
-      message: 'Quantity must be a positive integer!',
-    },
-  },
-});
+// const ordersSchema = new Schema<IOrders>({
+//   productName: {
+//     type: String,
+//     required: [true, 'Product name is required!'],
+//   },
+//   price: {
+//     type: Number,
+//     required: [true, 'Price is required!'],
+//     validate: {
+//       validator: (value: number) => Number.isInteger(value) && value > 0,
+//       message: 'Price must be a positive integer!',
+//     },
+//   },
+//   quantity: {
+//     type: Number,
+//     required: [true, 'Quantity is required!'],
+//     validate: {
+//       validator: (value: number) => Number.isInteger(value) && value > 0,
+//       message: 'Quantity must be a positive integer!',
+//     },
+//   },
+// });
 
 const userSchema = new Schema<IUser, UserModel>({
   userId: {
