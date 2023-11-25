@@ -98,16 +98,12 @@ const userSchema = new Schema<IUser, UserModel>({
     type: Boolean,
     default: true,
   },
-  hobbies: [
-    {
-      type: String,
-    },
-  ],
+  hobbies: [String],
   address: {
     type: addressSchema,
     required: [true, 'Address is required!'],
   },
-  orders: ordersSchema,
+  orders: Schema.Types.Mixed
 });
 
 userSchema.pre('save', async function (next) {
@@ -128,8 +124,15 @@ userSchema.post('save', function (doc, next) {
 
 //creating a custom static method
 userSchema.statics.isUserExists = async function (userId: string) {
-  const existingUser = await User.findOne({ userId });
+  const existingUser = await User.findOne({ userId: Number(userId) });
   return existingUser;
+};
+
+userSchema.statics.isOrderExists = async function (userId: string) {
+  const existingUser = await User.find({ userId: Number(userId), orders: { $exists: true } });
+
+  if (existingUser.length > 0) return true;
+  return false;
 };
 
 const User = model<IUser, UserModel>('User', userSchema);
