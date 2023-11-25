@@ -62,13 +62,6 @@ const userSchema = new Schema<IUser, UserModel>({
     type: Number,
     unique: true,
     required: [true, 'User ID is required!'],
-    validate: {
-      validator: async function (value: number): Promise<boolean> {
-        const existingUser = await User.findOne({ userId: value });
-        return !existingUser;
-      },
-      message: 'User ID must be unique!',
-    },
   },
   username: {
     type: String,
@@ -105,6 +98,7 @@ const userSchema = new Schema<IUser, UserModel>({
   orders: Schema.Types.Mixed
 });
 
+
 userSchema.pre('save', async function (next) {
   // eslint-disable-next-line @typescript-eslint/no-this-alias
   const user = this;
@@ -115,6 +109,8 @@ userSchema.pre('save', async function (next) {
   );
   next();
 });
+
+;
 
 // post save middleware / hook
 userSchema.post('save', function (doc, next) {

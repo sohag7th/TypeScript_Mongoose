@@ -131,6 +131,14 @@ const updateUser = async (req: Request, res: Response) => {
 const createOrderForUser = async (req: Request, res: Response) => {
   try {
     const { userId } = req.params;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { productName, price, quantity, ...rest } = req.body;
+    console.log(rest)
+
+    if (Object.keys(rest).length !== 0) {
+      throw new Error('Order Validation error');
+    }
+
     const zodParsedData = ordersValidationSchema.parse(req.body);
 
     await UserServices.createOrderForUserService(userId, zodParsedData);
@@ -194,7 +202,7 @@ const getTotalPriceOrders = async (req: Request, res: Response) => {
     res.status(200).json({
       success: true,
       message: 'Order fetched successfully!',
-      data: result,
+      data: result[0],
     });
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {

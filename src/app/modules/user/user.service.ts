@@ -1,6 +1,8 @@
 
+import config from '../../config';
 import { IOrders, IUser } from './user.interface';
 import User from './user.model';
+import bcrypt from 'bcrypt';
 
 const createUserService = async (userData: IUser) => {
   // const result = await User.create(userData);
@@ -55,6 +57,11 @@ const updateUserService = async (userData: IUser) => {
     if (!(await User.isUserExists(String(userData.userId)))) {
       throw new Error('User not found!');
     }
+
+    userData.password = await bcrypt.hash(
+      userData.password,
+      Number(config.bcrypt_salt_rounds),
+    );
 
     const result = await User.findOneAndUpdate(
       {
