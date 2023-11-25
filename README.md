@@ -19,6 +19,7 @@ npm install
 ## Quick start
 
 ```
+npm run build
 npm run start:dev
 ```
 
