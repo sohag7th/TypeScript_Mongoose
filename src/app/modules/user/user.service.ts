@@ -166,6 +166,7 @@ const getTotalPriceOfOrderService = async (userId: string) => {
         }
       }
     ]);
+
     return result;
   } catch (error) {
     throw new Error('User not found!');
