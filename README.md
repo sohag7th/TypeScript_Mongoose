@@ -5,6 +5,13 @@
 - User-friendly readable messages, configurable via options;
 - Maintain original errors under `error.details`;
 
+## Clone Repository
+
+```
+git clone https://github.com/sohag7th/TypeScript_Mongoose.git
+
+```
+
 ## Installation
 
 ```bash
