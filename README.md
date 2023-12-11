@@ -12,21 +12,20 @@ git clone https://github.com/sohag7th/TypeScript_Mongoose.git
 
 ```
 
+#### Requirements
+
+- Node.js v.18+
+- TypeScript v.4.5+
+
 ## Installation
 
 ```bash
 npm install
 ```
 
-#### Requirements
-
-- Node.js v.18+
-- TypeScript v.4.5+
-
 ## Quick start
 
 ```
-npm run build
 npm run start:dev
 ```
 
@@ -37,7 +36,7 @@ npm run start:dev
 // List of user objects. Each object should only contain username, fullName, age, email, address .
 
 ```
- GET: http://localhost:5000/api/users
+ GET: https://type-ebon.vercel.app/api/users
 
 ```
 
@@ -46,7 +45,7 @@ npm run start:dev
 // List of user objects. Each object should only contain username, fullName, age, email, address .
 
 ```
- POST:  http://localhost:5000/api/users
+ POST:  https://type-ebon.vercel.app/api/users
 
 ```
 
@@ -77,7 +76,7 @@ npm run start:dev
 ## 3. Retrieve a specific user by ID
 
 ```
- GET: http://localhost:5000/api/users/:userId
+ GET: https://type-ebon.vercel.app/api/users/:userId
 
 ```
 
@@ -111,7 +110,7 @@ npm run start:dev
 ## 4. Update user information
 
 ```
- PUT : http://localhost:5000/api/users/:userId
+ PUT : https://type-ebon.vercel.app/api/users/:userId
 
 ```
 
@@ -145,7 +144,7 @@ npm run start:dev
 ## 5. Delete a user
 
 ```
- DELETE  : http://localhost:5000/api/users/:userId
+ DELETE  : https://type-ebon.vercel.app/api/users/:userId
 
 ```
 
@@ -160,7 +159,7 @@ npm run start:dev
 ## 6.Add New Product in Order
 
 ```
- PUT  : http://localhost:5000/api/users/:userId/orders
+ PUT  : https://type-ebon.vercel.app/api/users/:userId/orders
 
  {
     "productName": "string",
@@ -181,7 +180,7 @@ npm run start:dev
 ## 7. Retrieve all orders for a specific user
 
 ```
- GET   : http://localhost:5000/api/users/:userId/orders
+ GET   : https://type-ebon.vercel.app/api/users/:userId/orders
 
 ```
 
@@ -209,10 +208,7 @@ npm run start:dev
 ## 8. Calculate Total Price of Orders for a Specific User
 
 ```
- PUT  : http://localhost:5000/api/users/:userId/orders
-
-
-
+ PUT  : https://type-ebon.vercel.app/api/users/:userId/orders
 ```
 
 ```response
